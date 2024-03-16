@@ -1,13 +1,5 @@
 import Board from "./components/Board";
 
-function App() {
-  return (
-    <>
-      <div>
-        <Board />
-      </div>
-    </>
-  );
+export default function App(): JSX.Element {
+  return <Board />;
 }
-
-export default App;
