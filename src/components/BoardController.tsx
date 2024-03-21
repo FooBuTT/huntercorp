@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Ball } from "../futures/types/types";
 import BoardView from "./BoardView";
 import ColorMenu from "./ColorMenu";
@@ -132,60 +132,72 @@ const BoardController: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const handleSelectBall = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = event.currentTarget;
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+  const handleSelectBall = useCallback(
+    (event: React.MouseEvent<HTMLCanvasElement>) => {
+      const canvas = event.currentTarget;
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = event.clientX - rect.left;
+      const mouseY = event.clientY - rect.top;
 
-    const clickedBallIndex = balls.findIndex((ball) => {
-      const dx = ball.x - mouseX;
-      const dy = ball.y - mouseY;
-      return Math.sqrt(dx * dx + dy * dy) <= ball.radius;
-    });
+      const clickedBallIndex = balls.findIndex((ball) => {
+        const dx = ball.x - mouseX;
+        const dy = ball.y - mouseY;
+        return Math.sqrt(dx * dx + dy * dy) <= ball.radius;
+      });
 
-    if (selectedBallIndex !== null) {
-      setResetAnimation(true);
-      console.log(power);
-      setSelectedBallIndex(null);
+      setSelectedBallIndex(clickedBallIndex !== -1 ? clickedBallIndex : null);
+      setMousePosition({ x: mouseX, y: mouseY });
 
-      setBalls((prevBalls) =>
-        prevBalls.map((ball, index) => {
-          if (index === selectedBallIndex) {
-            const powerMultiplier = power / 10;
-            const newDx = ball.x - mouseX || 0;
-            const newDy = ball.y - mouseY || 0;
-            return {
-              ...ball,
-              dx: newDx * powerMultiplier,
-              dy: newDy * powerMultiplier,
-            };
-          }
-          return ball;
-        })
-      );
-    }
+      if (selectedBallIndex !== null) {
+        setResetAnimation(true);
+        console.log(power);
+        setSelectedBallIndex(null);
 
-    setSelectedBallIndex(clickedBallIndex !== -1 ? clickedBallIndex : null);
-    setMousePosition({ x: mouseX, y: mouseY });
-  };
-  const handleMouseMove = (event: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = event.currentTarget;
-    const rect = canvas.getBoundingClientRect();
-    const mouseX = event.clientX - rect.left;
-    const mouseY = event.clientY - rect.top;
+        setBalls((prevBalls) =>
+          prevBalls.map((ball, index) => {
+            if (index === selectedBallIndex) {
+              const powerMultiplier = power / 10;
+              const newDx = ball.x - mouseX || 0;
+              const newDy = ball.y - mouseY || 0;
+              return {
+                ...ball,
+                dx: newDx * powerMultiplier,
+                dy: newDy * powerMultiplier,
+              };
+            }
+            return ball;
+          })
+        );
+      }
+    },
+    [balls, power, selectedBallIndex]
+  );
 
-    setMousePosition({ x: mouseX, y: mouseY });
-  };
-  const handleColorChange = (color: string) => {
-    if (selectedBallIndex !== null) {
-      setBalls((prevBalls) =>
-        prevBalls.map((ball, index) =>
-          index === selectedBallIndex ? { ...ball, color: color } : ball
-        )
-      );
-    }
-  };
+  const handleMouseMove = useCallback(
+    (event: React.MouseEvent<HTMLCanvasElement>) => {
+      const canvas = event.currentTarget;
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = event.clientX - rect.left;
+      const mouseY = event.clientY - rect.top;
+
+      setMousePosition({ x: mouseX, y: mouseY });
+    },
+    []
+  );
+
+  const handleColorChange = useCallback(
+    (color: string) => {
+      if (selectedBallIndex !== null) {
+        setBalls((prevBalls) =>
+          prevBalls.map((ball, index) =>
+            index === selectedBallIndex ? { ...ball, color: color } : ball
+          )
+        );
+      }
+    },
+    [selectedBallIndex]
+  );
+
   return (
     <>
       <BoardView
