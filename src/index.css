@@ -4,15 +4,26 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 }
 
 body {
   margin: 0;
   padding: 0;
 }
-.board {
-  border: 2px solid black;
-  background-color: grey;
-  width: 800px;
-  height: 540px;
+
+.menu-container {
+  margin-top: 20px;
+  scale: 2;
+}
+.color-picker {
+  display: flex;
+  flex-direction: row; /* Расстановка цветов в строку */
+}
+.color-option {
+  display: flex;
+  width: 20px; /* Задайте ширину */
+  height: 20px; /* Задайте высоту */
+  margin: 5px; /* Отступы между цветами */
+  cursor: pointer; /* Измените курсор при наведении */
 }

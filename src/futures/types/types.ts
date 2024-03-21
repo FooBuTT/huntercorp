@@ -3,6 +3,6 @@ export type Ball = {
   y: number;
   radius: number;
   color: string;
-  dx?: number;
-  dy?: number;
+  dx: number;
+  dy: number;
 };

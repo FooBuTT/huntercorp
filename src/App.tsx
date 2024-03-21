@@ -1,5 +1,5 @@
-import Board from "./components/Board";
+import BoardController from "./components/BoardController";
 
 export default function App(): JSX.Element {
-  return <Board />;
+  return <BoardController />;
 }
