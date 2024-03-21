@@ -1,0 +1,1 @@
+#root{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column}body{margin:0;padding:0}.menu-container{margin-top:20px;scale:2}.color-picker{display:flex;flex-direction:row}.color-option{display:flex;width:20px;height:20px;margin:5px;cursor:pointer}
